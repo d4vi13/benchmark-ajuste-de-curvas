@@ -13,7 +13,7 @@
 
 void montaSL(double **A, double *b, int n, long long int p, double *x, double *y) {
   int somaIndices;
-  for (int i = 0; i < n; ++i)
+  for (int i = 0; i < n; ++i){
     for (int j = 0; j < n; ++j) {
       A[i][j] = 0.0; 
       somaIndices = i + j; 
@@ -22,7 +22,6 @@ void montaSL(double **A, double *b, int n, long long int p, double *x, double *y
       }
     }
 
-  for (int i = 0; i < n; ++i) {
     b[i] = 0.0;
     for (long long int k = 0; k < p; ++k)
       b[i] += pow(x[k],i) * y[k];
