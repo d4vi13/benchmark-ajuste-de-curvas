@@ -12,11 +12,13 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 void montaSL(double **A, double *b, int n, long long int p, double *x, double *y) {
+  int somaIndices;
   for (int i = 0; i < n; ++i)
     for (int j = 0; j < n; ++j) {
-      A[i][j] = 0.0;
+      A[i][j] = 0.0; 
+      somaIndices = i + j; 
       for (long long int k = 0; k < p; ++k) {
-	A[i][j] += pow(x[k], i+j);
+        A[i][j] += pow(x[k], somaIndices);
       }
     }
 
