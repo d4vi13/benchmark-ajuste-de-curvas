@@ -40,11 +40,14 @@ void montaSL(double **A, double *b, int n, long long int p, double *x, double *y
         A[i][j+5] += power;
       } 
     }
+
     for (int j = n-(n%UNROLL); j < n; ++i){
       A[i][j] = 0.0; 
       somaIndices = i + j;  
-      A[i][j] += pow(x[k], somaIndices);
+      for (long long int k = 0; k < p; ++k)
+        A[i][j] += pow(x[k], somaIndices);
     }
+
     b[i] = 0.0;
     for (long long int k = 0; k < p; ++k)
       b[i] += pow(x[k],i) * y[k];
