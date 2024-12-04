@@ -11,6 +11,11 @@
 //   AJUSTE DE CURVAS
 /////////////////////////////////////////////////////////////////////////////////////
 
+
+/*
+ * 1 mudanca: retira a calculo i+j do loop
+ * 2 mudanca: funde os dois loops de i ate n-1
+ */
 void montaSL(double **A, double *b, int n, long long int p, double *x, double *y) {
   int somaIndices;
   for (int i = 0; i < n; ++i){
@@ -49,7 +54,7 @@ void eliminacaoGauss(double **A, double *b, int n) {
       double m = A[k][i] / A[i][i];
       A[k][i]  = 0.0;
       for (int j = i+1; j < n; ++j)
-	A[k][j] -= A[i][j]*m;
+        A[k][j] -= A[i][j]*m;
       b[k] -= b[i]*m;
     }
   }
@@ -64,11 +69,18 @@ void retrossubs(double **A, double *b, double *x, int n) {
   }
 }
 
+
+/* 
+ * 1 mudanca: retira o use de pow() e guarda valor em uma variavel para 
+ * progressivo da potencia
+ */
 double P(double x, int N, double *alpha) {
-  double Px = alpha[0];
-  for (int i = 1; i <= N; ++i)
-    Px += alpha[i]*pow(x,i);
-  
+  double powerx = x, Px = alpha[0];
+  for (int i = 1; i <= N; ++i){
+    Px += alpha[i]*powerx;
+    powerx *= x;
+  }  
+
   return Px;
 }
 
