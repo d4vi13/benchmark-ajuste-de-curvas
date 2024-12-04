@@ -7,6 +7,8 @@
 
 #include "utils.h"
 
+#define UNROLL 6
+
 /////////////////////////////////////////////////////////////////////////////////////
 //   AJUSTE DE CURVAS
 /////////////////////////////////////////////////////////////////////////////////////
@@ -18,15 +20,31 @@
  */
 void montaSL(double **A, double *b, int n, long long int p, double *x, double *y) {
   int somaIndices;
+  double power;
   for (int i = 0; i < n; ++i){
-    for (int j = 0; j < n; ++j) {
+    for (int j = 0; j < n-(n%UNROLL); j += UNROLL) {
       A[i][j] = 0.0; 
       somaIndices = i + j; 
       for (long long int k = 0; k < p; ++k) {
-        A[i][j] += pow(x[k], somaIndices);
-      }
+        power = pow(x[k], somaIndices);
+        A[i][j] += power;
+        power *= x[k];
+        A[i][j+1] += power;
+        power *= x[k];
+        A[i][j+2] += power;
+        power *= x[k];
+        A[i][j+3] += power;
+        power *= x[k];
+        A[i][j+4] += power;
+        power *= x[k];
+        A[i][j+5] += power;
+      } 
     }
-
+    for (int j = n-(n%UNROLL); j < n; ++i){
+      A[i][j] = 0.0; 
+      somaIndices = i + j;  
+      A[i][j] += pow(x[k], somaIndices);
+    }
     b[i] = 0.0;
     for (long long int k = 0; k < p; ++k)
       b[i] += pow(x[k],i) * y[k];
@@ -38,7 +56,7 @@ void eliminacaoGauss(double **A, double *b, int n) {
     int iMax = i;
     for (int k = i+1; k < n; ++k)
       if (A[k][i] > A[iMax][i])
-	iMax = k;
+        iMax = k;
     if (iMax != i) {
       double *tmp, aux;
       tmp = A[i];
