@@ -32,18 +32,12 @@ void montaSL(double **A, double *b, int n, long long int p, double *x, double *y
       
       somaIndices = i + j; 
       for (long long int k = 0; k < p; ++k) {
-        power = pow(x[k], somaIndices);
-        A[i][j] += power;
-        power *= x[k];
-        A[i][j+1] += power;
-        power *= x[k];
-        A[i][j+2] += power;
-        power *= x[k];
-        A[i][j+3] += power;
-        power *= x[k];
-        A[i][j+4] += power;
-        power *= x[k];
-        A[i][j+5] += power;
+        A[i][j] += pow(x[k], somaIndices);
+        A[i][j+1] += pow(x[k], somaIndices + 1);
+        A[i][j+2] += pow(x[k], somaIndices + 2);
+        A[i][j+3] += pow(x[k], somaIndices + 3);
+        A[i][j+4] += pow(x[k], somaIndices + 4);
+        A[i][j+5] += pow(x[k], somaIndices + 5);
       } 
     }
 
