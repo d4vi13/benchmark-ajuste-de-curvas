@@ -64,8 +64,10 @@ void eliminacaoGauss(double **A, double *b, int n) {
   for (int i = 0; i < n; ++i) {
     int iMax = i;
     for (int k = i+1; k < n; ++k)
-      if (A[k][i] > A[iMax][i])
+      if (A[k][i] > A[iMax][i]){
         iMax = k;
+      }
+
     if (iMax != i) {
       double *tmp, aux;
       tmp = A[i];
@@ -80,8 +82,9 @@ void eliminacaoGauss(double **A, double *b, int n) {
     for (int k = i+1; k < n; ++k) {
       double m = A[k][i] / A[i][i];
       A[k][i]  = 0.0;
-      for (int j = i+1; j < n; ++j)
+      for (int j = i+1; j < n; ++j){
         A[k][j] -= A[i][j]*m;
+      }
       b[k] -= b[i]*m;
     }
   }
@@ -107,7 +110,6 @@ double P(double x, int N, double *alpha) {
     Px += alpha[i]*powerx;
     powerx *= x;
   }  
-
   return Px;
 }
 
