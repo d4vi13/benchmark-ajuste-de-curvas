@@ -88,12 +88,12 @@ void eliminacaoGauss(double **A, double *b, int n) {
   }
 }
 
-void retrossubs(double *A, double *b, double *x, int n) {
+void retrossubs(double **A, double *b, double *x, int n) {
   for (int i = n-1; i >= 0; --i) {
     x[i] = b[i];
     for (int j = i+1; j < n; ++j)
-      x[i] -= A[i*n+j]*x[j];
-    x[i] /= A[i*n+i];
+      x[i] -= A[i][j]*x[j];
+    x[i] /= A[i][i];
   }
 }
 
@@ -140,12 +140,12 @@ int main() {
   tSL = timestamp() - tSL;
 
   for (int i = 0; i < n; i++) 
-      B[i] = &A[i];
+      B[i] = &A[i*n];
   
   // (B) Resolve SL
   double tEG = timestamp();
   eliminacaoGauss(B, b, n); 
-  retrossubs(A, b, alpha, n); 
+  retrossubs(B, b, alpha, n); 
   tEG = timestamp() - tEG;
 
   // Imprime coeficientes
