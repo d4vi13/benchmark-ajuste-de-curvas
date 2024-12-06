@@ -58,20 +58,19 @@ void montaSL(double *A, double *b, int n, long long int p, double *x, double *y)
   }
 }
 
-void eliminacaoGauss(double *A, double *b, int n) {
+void eliminacaoGauss(double **A, double *b, int n) {
   for (int i = 0; i < n; ++i) {
     int iMax = i;
     for (int k = i+1; k < n; ++k)
-      if (A[k*n+i] > A[iMax*n+i]){
+      if (A[k][i] > A[iMax][i]){
         iMax = k;
       }
 
     if (iMax != i) {
       double *tmp, aux;
-      tmp = malloc(sizeof(double)*n); 
-      memcpy(tmp, A + i*n, sizeof(double)*n);
-      memcpy(A+i*n, A + iMax*n, sizeof(double)*n);
-      memcpy(A + i*n, tmp, sizeof(double)*n);
+      tmp = A[i];
+      A[i] = A[iMax];
+      A[iMax] = tmp;
 
       aux = b[i];
       b[i] = b[iMax];
@@ -79,10 +78,10 @@ void eliminacaoGauss(double *A, double *b, int n) {
     }
 
     for (int k = i+1; k < n; ++k) {
-      double m = A[k*n+i] / A[i*n+i];
-      A[k*n+i]  = 0.0;
+      double m = A[k][i] / A[i][i];
+      A[k][i]  = 0.0;
       for (int j = i+1; j < n; ++j){
-        A[k*n+j] -= A[i*n+j]*m;
+        A[k][j] -= A[i][j]*m;
       }
       b[k] -= b[i]*m;
     }
@@ -129,6 +128,8 @@ int main() {
     scanf("%lf %lf", x+i, y+i);
 
   double *A = (double *) malloc(sizeof(double)*n*n);
+  double **B = (double **) malloc(sizeof(double*)*n);
+
   
   double *b = (double *) malloc(sizeof(double)*n);
   double *alpha = (double *) malloc(sizeof(double)*n); // coeficientes ajuste
@@ -138,9 +139,12 @@ int main() {
   montaSL(A, b, n, p, x, y);
   tSL = timestamp() - tSL;
 
+  for (int i = 0; i < n; i++) 
+      B[i] = &A[i];
+  
   // (B) Resolve SL
   double tEG = timestamp();
-  eliminacaoGauss(A, b, n); 
+  eliminacaoGauss(B, b, n); 
   retrossubs(A, b, alpha, n); 
   tEG = timestamp() - tEG;
 
