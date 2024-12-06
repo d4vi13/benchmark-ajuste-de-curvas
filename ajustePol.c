@@ -14,12 +14,40 @@
 //   AJUSTE DE CURVAS
 /////////////////////////////////////////////////////////////////////////////////////
 
+void montaSL(double *A, double *b, int n, long long int p, double *x, double *y) {
+  int somaIndices;
+  for(int i = 0; i < n; ++i){
+    A[i] = 0.0;
+    for (long long int k = 0; k < p; ++k) {                                                                                                                             
+      A[i] += pow(x[k], i);
+    }   
+  }     
+
+  for (int i = 1; i < n; ++i){
+    for (int j = 0; j < n-i; ++j) {
+      somaIndices = i+j;
+      A[i*n+j] = A[(i-1)*n + j+1];
+    }   
+    for (int j = n-1; j < n; ++j) {
+      A[i*n+j] = 0.0;
+      somaIndices = i+j;
+      for (long long int k = 0; k < p; ++k) {                                                                                                                             
+        A[i*n+j] += pow(x[k], somaIndices);
+      }
+    }   
+
+    b[i] = 0.0;
+    for (long long int k = 0; k < p; ++k)
+      b[i] += pow(x[k],i) * y[k];
+  }
+}
+
 
 /*
  * 1 mudanca: retira a calculo i+j do loop
  * 2 mudanca: funde os dois loops de i ate n-1
  */
-void montaSL(double *A, double *b, int n, long long int p, double *x, double *y) {
+void OLDmontaSL(double *A, double *b, int n, long long int p, double *x, double *y) {
   int somaIndices;
   double power;
   for (int i = 0; i < n; ++i){
