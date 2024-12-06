@@ -4,6 +4,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "utils.h"
 
@@ -18,7 +19,7 @@
  * 1 mudanca: retira a calculo i+j do loop
  * 2 mudanca: funde os dois loops de i ate n-1
  */
-void montaSL(double **A, double *b, int n, long long int p, double *x, double *y) {
+void montaSL(double *A, double *b, int n, long long int p, double *x, double *y) {
   int somaIndices;
   double power;
   for (int i = 0; i < n; ++i){
@@ -28,47 +29,49 @@ void montaSL(double **A, double *b, int n, long long int p, double *x, double *y
       b[i] += pow(x[k],i) * y[k];
 
     for (int j = 0; j < n-(n%UNROLL); j += UNROLL) {
-      A[i][j] = 0.0; 
-      A[i][j+1] = 0.0; 
-      A[i][j+2] = 0.0; 
-      A[i][j+3] = 0.0; 
-      A[i][j+4] = 0.0; 
-      A[i][j+5] = 0.0; 
+      
+      A[i*n+j] = 0.0; 
+      A[i*n+j+1] = 0.0; 
+      A[i*n+j+2] = 0.0; 
+      A[i*n+j+3] = 0.0; 
+      A[i*n+j+4] = 0.0; 
+      A[i*n+j+5] = 0.0; 
       
       somaIndices = i + j; 
       for (long long int k = 0; k < p; ++k) {
-        A[i][j] += pow(x[k], somaIndices);
-        A[i][j+1] += pow(x[k], somaIndices + 1);
-        A[i][j+2] += pow(x[k], somaIndices + 2);
-        A[i][j+3] += pow(x[k], somaIndices + 3);
-        A[i][j+4] += pow(x[k], somaIndices + 4);
-        A[i][j+5] += pow(x[k], somaIndices + 5);
+        A[i*n+j] += pow(x[k], somaIndices);
+        A[i*n+j+1] += pow(x[k], somaIndices + 1);
+        A[i*n+j+2] += pow(x[k], somaIndices + 2);
+        A[i*n+j+3] += pow(x[k], somaIndices + 3);
+        A[i*n+j+4] += pow(x[k], somaIndices + 4);
+        A[i*n+j+5] += pow(x[k], somaIndices + 5);
       } 
     }
 
     for (int j = n-(n%UNROLL); j < n; ++j){
-      A[i][j] = 0.0; 
+      A[i*n+j] = 0.0; 
       somaIndices = i + j;  
       for (long long int k = 0; k < p; ++k)
-        A[i][j] += pow(x[k], somaIndices);
+        A[i*n+j] += pow(x[k], somaIndices);
     }
     
   }
 }
 
-void eliminacaoGauss(double **A, double *b, int n) {
+void eliminacaoGauss(double *A, double *b, int n) {
   for (int i = 0; i < n; ++i) {
     int iMax = i;
     for (int k = i+1; k < n; ++k)
-      if (A[k][i] > A[iMax][i]){
+      if (A[k*n+i] > A[iMax*n+i]){
         iMax = k;
       }
 
     if (iMax != i) {
       double *tmp, aux;
-      tmp = A[i];
-      A[i] = A[iMax];
-      A[iMax] = tmp;
+      tmp = malloc(sizeof(double)*n); 
+      memcpy(tmp, A + i*n, sizeof(double)*n);
+      memcpy(A+i*n, A + iMax*n, sizeof(double)*n);
+      memcpy(A + i*n, tmp, sizeof(double)*n);
 
       aux = b[i];
       b[i] = b[iMax];
@@ -76,22 +79,22 @@ void eliminacaoGauss(double **A, double *b, int n) {
     }
 
     for (int k = i+1; k < n; ++k) {
-      double m = A[k][i] / A[i][i];
-      A[k][i]  = 0.0;
+      double m = A[k*n+i] / A[i*n+i];
+      A[k*n+i]  = 0.0;
       for (int j = i+1; j < n; ++j){
-        A[k][j] -= A[i][j]*m;
+        A[k*n+j] -= A[i*n+j]*m;
       }
       b[k] -= b[i]*m;
     }
   }
 }
 
-void retrossubs(double **A, double *b, double *x, int n) {
+void retrossubs(double *A, double *b, double *x, int n) {
   for (int i = n-1; i >= 0; --i) {
     x[i] = b[i];
     for (int j = i+1; j < n; ++j)
-      x[i] -= A[i][j]*x[j];
-    x[i] /= A[i][i];
+      x[i] -= A[i*n+j]*x[j];
+    x[i] /= A[i*n+i];
   }
 }
 
@@ -125,9 +128,7 @@ int main() {
   for (long long int i = 0; i < p; ++i)
     scanf("%lf %lf", x+i, y+i);
 
-  double **A = (double **) malloc(sizeof(double *)*n);
-  for (int i = 0; i < n; ++i)
-    A[i] = (double *) malloc(sizeof(double)*n);
+  double *A = (double *) malloc(sizeof(double)*n*n);
   
   double *b = (double *) malloc(sizeof(double)*n);
   double *alpha = (double *) malloc(sizeof(double)*n); // coeficientes ajuste
