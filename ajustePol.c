@@ -18,17 +18,19 @@ void montaSL(double *A, double *b, int n, long long int p, double *x, double *y)
   int somaIndices;
   for(int i = 0; i < n; ++i){
     A[i] = 0.0;
+    b[i] = 0.0;
     for (long long int k = 0; k < p; ++k) {                                                                                                                             
-      A[i] += pow(x[k], i);
+      double power = pow(x[k],i);
+      A[i] += power;
+      b[i] += power * y[k];
     }   
   }     
 
   for (int i = 1; i < n; ++i){
     for (int j = 0; j < n-i; ++j) {
-      somaIndices = i+j;
       A[i*n+j] = A[(i-1)*n + j+1];
     }   
-    for (int j = n-1; j < n; ++j) {
+    for (int j = n-i; j < n; ++j) {
       A[i*n+j] = 0.0;
       somaIndices = i+j;
       for (long long int k = 0; k < p; ++k) {                                                                                                                             
@@ -176,6 +178,11 @@ int main() {
   retrossubs(B, b, alpha, n); 
   tEG = timestamp() - tEG;
 
+  for (int i = 0; i < n*n; i++){
+    printf("%1.15e\n ", A[i]);
+  }
+  printf("matrix ^\n");
+
   // Imprime coeficientes
   for (int i = 0; i < n; ++i)
     printf("%1.15e ", alpha[i]);
@@ -187,7 +194,7 @@ int main() {
   puts("");
 
   // Imprime os tempos
-  printf("%lld %1.10e %1.10e\n", K, tSL, tEG);
+  printf("%d %lld %1.10e %1.10e\n",n, K, tSL, tEG);
 
   return 0;
 }
