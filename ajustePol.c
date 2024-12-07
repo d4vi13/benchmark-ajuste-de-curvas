@@ -27,16 +27,13 @@ void montaSL(double *A, double *b, int n, long long int p, double *x, double *y)
   }     
 
   for (int i = 1; i < n; ++i){
-    for (int j = 0; j < n-i; ++j) {
+    for (int j = 0; j < n-1; ++j) {
       A[i*n+j] = A[(i-1)*n + j+1];
     }   
-    for (int j = n-i; j < n; ++j) {
-      A[i*n+j] = 0.0;
-      somaIndices = i+j;
-      for (long long int k = 0; k < p; ++k) {                                                                                                                             
-        A[i*n+j] += pow(x[k], somaIndices);
-      }
-    }   
+    A[i*n+n-1] = 0.0;
+    somaIndices = i+n-1;
+    for (long long int k = 0; k < p; ++k)                                                                                                                             
+      A[i*n+n-1] += pow(x[k], somaIndices);
 
     b[i] = 0.0;
     for (long long int k = 0; k < p; ++k)
