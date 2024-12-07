@@ -14,8 +14,13 @@
 //   AJUSTE DE CURVAS
 /////////////////////////////////////////////////////////////////////////////////////
 
+/*
+ * 1 - reaproveita dados calculados fazendo com q va de O(n^2) para O(2n)
+ * 2 - coloca somaIndice em uma variavel para diminuir o calculo
+ */
 void montaSL(double *A, double *b, int n, long long int p, double *x, double *y) {
   int somaIndices;
+  // calcula a primeira linha inteira
   for(int i = 0; i < n; ++i){
     A[i] = 0.0;
     b[i] = 0.0;
@@ -27,9 +32,12 @@ void montaSL(double *A, double *b, int n, long long int p, double *x, double *y)
   }     
 
   for (int i = 1; i < n; ++i){
+    // copia n-1 menos elementos da linha anterior
     for (int j = 0; j < n-1; ++j) {
       A[i*n+j] = A[(i-1)*n + j+1];
     }   
+
+    // calcula um unico novo elemento
     A[i*n+n-1] = 0.0;
     somaIndices = i+n-1;
     for (long long int k = 0; k < p; ++k)                                                                                                                             
