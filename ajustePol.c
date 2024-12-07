@@ -105,8 +105,9 @@ int main() {
   retrossubs(A, b, alpha, n); 
   tEG = timestamp() - tEG;
 
-  for (int i = 0; i < n*n; i++){
-    printf("%1.15e\n ", A[i]);                                                                                                                                            
+  for (int i = 0; i < n; i++){
+      for (int j = 0; j < n; j++)
+        printf("%1.15e\n ", A[i][j]);                                                                                                                                            
   }
   printf("matrix ^\n");
 
