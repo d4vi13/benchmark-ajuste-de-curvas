@@ -113,45 +113,56 @@ void eliminacaoGauss(double **A, double *b, int n) {
             b[i] = b[iMax];
             b[iMax] = aux;
         }
-
-        for (int k = i+1; k < n-(n%UNROLL); k+=UNROLL) {
-            double m[UNROLL];
-            m[0] = A[k][i] / A[i][i];
-            m[1] = A[k+1][i] / A[i][i];
-            m[2] = A[k+2][i] / A[i][i];
-            m[3] = A[k+3][i] / A[i][i];
-            m[4] = A[k+4][i] / A[i][i];
-            m[5] = A[k+5][i] / A[i][i];
-            A[k][i]  = 0.0;
-            A[k+1][i]  = 0.0;
-            A[k+2][i]  = 0.0;
-            A[k+3][i]  = 0.0;
-            A[k+4][i]  = 0.0;
-            A[k+5][i]  = 0.0;
-            for (int j = i+1; j < n; ++j){
-                A[k][j] -= A[i][j]*m[0];
-                A[k+1][j] -= A[i][j]*m[1];
-                A[k+2][j] -= A[i][j]*m[2];
-                A[k+3][j] -= A[i][j]*m[3];
-                A[k+4][j] -= A[i][j]*m[4];
-                A[k+5][j] -= A[i][j]*m[5];
+        int kk;
+        for (kk = i+1; (kk+BLOCK) < n-(n%UNROLL); kk+=BLOCK){
+            int kend = kk + BLOCK;
+            for (int k = kk; k < kend-(kend%UNROLL); k+=UNROLL) {
+                double m[UNROLL];
+                m[0] = A[k][i] / A[i][i];
+                m[1] = A[k+1][i] / A[i][i];
+                m[2] = A[k+2][i] / A[i][i];
+                m[3] = A[k+3][i] / A[i][i];
+                m[4] = A[k+4][i] / A[i][i];
+                m[5] = A[k+5][i] / A[i][i];
+                A[k][i]  = 0.0;
+                A[k+1][i]  = 0.0;
+                A[k+2][i]  = 0.0;
+                A[k+3][i]  = 0.0;
+                A[k+4][i]  = 0.0;
+                A[k+5][i]  = 0.0;
+                for (int j = i+1; j < n; ++j){
+                    A[k][j] -= A[i][j]*m[0];
+                    A[k+1][j] -= A[i][j]*m[1];
+                    A[k+2][j] -= A[i][j]*m[2];
+                    A[k+3][j] -= A[i][j]*m[3];
+                    A[k+4][j] -= A[i][j]*m[4];
+                    A[k+5][j] -= A[i][j]*m[5];
+                }
+                b[k] -= b[i]*m[0];
+                b[k+1] -= b[i]*m[1];
+                b[k+2] -= b[i]*m[2];
+                b[k+3] -= b[i]*m[3];
+                b[k+4] -= b[i]*m[4];
+                b[k+5] -= b[i]*m[5];
             }
-            b[k] -= b[i]*m[0];
-            b[k+1] -= b[i]*m[1];
-            b[k+2] -= b[i]*m[2];
-            b[k+3] -= b[i]*m[3];
-            b[k+4] -= b[i]*m[4];
-            b[k+5] -= b[i]*m[5];
-        }
-        int max = n-(n%UNROLL) < i+1 ? i+1 : n-(n%UNROLL);
-        for (int k = max; k < n; ++k) {
-            double m = A[k][i] / A[i][i];
-            A[k][i]  = 0.0;
-            for (int j = i+1; j < n; ++j){
-                A[k][j] -= A[i][j]*m;
+            for (int k = kend-(kend%UNROLL); k < n; ++k) {
+                double m = A[k][i] / A[i][i];
+                A[k][i]  = 0.0;
+                for (int j = i+1; j < n; ++j){
+                    A[k][j] -= A[i][j]*m;
+                }
+                b[k] -= b[i]*m;
             }
-            b[k] -= b[i]*m;
         }
+            //int max = kend-(kend%UNROLL) < i+1 ? i+1 : kend-(kend%UNROLL);
+            for (int k = kk; k < n; ++k) {
+                double m = A[k][i] / A[i][i];
+                A[k][i]  = 0.0;
+                for (int j = i+1; j < n; ++j){
+                    A[k][j] -= A[i][j]*m;
+                }
+                b[k] -= b[i]*m;
+            }
     }
 }
 
