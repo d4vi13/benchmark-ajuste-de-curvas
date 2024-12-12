@@ -9,7 +9,8 @@
 #include "utils.h"
 
 #define UNROLL 6
-#define BLOCK 120 
+
+#define BLOCK 64 
 
 /////////////////////////////////////////////////////////////////////////////////////
 //   AJUSTE DE CURVAS
@@ -113,70 +114,60 @@ void eliminacaoGauss(double **A, double *b, int n) {
             b[iMax] = aux;
         }
 
-        int kkend = 0;
-        for (int kk = i+1; kk < n/BLOCK; kk++){
-            int kkstart =  kk*BLOCK;
-            kkend = kkstart+BLOCK; 
-            for (int jj = i+1; jj < n/BLOCK; jj++){
-                int k=kkstart, jjstart = jj*BLOCK, jjend = jjstart+BLOCK;
-                if (kkend <= n-(n%UNROLL)){
-                    for (int k = kkstart; k < kkend-(kkend%UNROLL); k+=UNROLL) {
-                        double m0 = A[k][i] / A[i][i];
-                        double m1 = A[k+1][i] / A[i][i];
-                        double m2 = A[k+2][i] / A[i][i];
-                        double m3 = A[k+3][i] / A[i][i];
-                        double m4 = A[k+4][i] / A[i][i];
-                        double m5 = A[k+5][i] / A[i][i];
-                        A[k][i]  = 0.0;
-                        A[k+1][i]  = 0.0;
-                        A[k+2][i]  = 0.0;
-                        A[k+3][i]  = 0.0;
-                        A[k+4][i]  = 0.0;
-                        A[k+5][i]  = 0.0;
-                        for (int j = jjstart; j < jjend; ++j){
-                            A[k][j] -= A[i][j]*m0;
-                            A[k+1][j] -= A[i][j]*m1;
-                            A[k+2][j] -= A[i][j]*m2;
-                            A[k+3][j] -= A[i][j]*m3;
-                            A[k+4][j] -= A[i][j]*m4;
-                            A[k+5][j] -= A[i][j]*m5;
-                        }
-                        b[k] -= b[i]*m0;
-                        b[k+1] -= b[i]*m1;
-                        b[k+2] -= b[i]*m2;
-                        b[k+3] -= b[i]*m3;
-                        b[k+4] -= b[i]*m4;
-                        b[k+5] -= b[i]*m5;
-                    }
-                    for (int k = kkend-(kkend%UNROLL); k < n; ++k) {
-                        double m = A[k][i] / A[i][i];
-                        A[k][i]  = 0.0;
-                        for (int j = jjstart; j < jjend; ++j){
-                            A[k][j] -= A[i][j]*m;
-                        }
-                        b[k] -= b[i]*m;
-                    }
-                }else{
-                    for (int k = n-(n%UNROLL); k < n; ++k) {
-                        double m = A[k][i] / A[i][i];
-                        A[k][i]  = 0.0;
-                        for (int j = jjstart; j < jjend; ++j){
-                            A[k][j] -= A[i][j]*m;
-                        }
-                        b[k] -= b[i]*m;
-                    } 
-                }
-            } 
+        for (int k = i+1; k < n-(n%UNROLL); k+=UNROLL) {
+            double m[UNROLL];
+            m[0] = A[k][i] / A[i][i];
+            m[1] = A[k+1][i] / A[i][i];
+            m[2] = A[k+2][i] / A[i][i];
+            m[3] = A[k+3][i] / A[i][i];
+            m[4] = A[k+4][i] / A[i][i];
+            m[5] = A[k+5][i] / A[i][i];
+            A[k][i]  = 0.0;
+            A[k+1][i]  = 0.0;
+            A[k+2][i]  = 0.0;
+            A[k+3][i]  = 0.0;
+            A[k+4][i]  = 0.0;
+            A[k+5][i]  = 0.0;
+            for (int j = i+1; j < n; ++j){
+                A[k][j] -= A[i][j]*m[0];
+                A[k+1][j] -= A[i][j]*m[1];
+                A[k+2][j] -= A[i][j]*m[2];
+                A[k+3][j] -= A[i][j]*m[3];
+                A[k+4][j] -= A[i][j]*m[4];
+                A[k+5][j] -= A[i][j]*m[5];
+            }
+            b[k] -= b[i]*m[0];
+            b[k+1] -= b[i]*m[1];
+            b[k+2] -= b[i]*m[2];
+            b[k+3] -= b[i]*m[3];
+            b[k+4] -= b[i]*m[4];
+            b[k+5] -= b[i]*m[5];
+        }
+        int max = n-(n%UNROLL) < i+1 ? i+1 : n-(n%UNROLL);
+        for (int k = max; k < n; ++k) {
+            double m = A[k][i] / A[i][i];
+            A[k][i]  = 0.0;
+            for (int j = i+1; j < n; ++j){
+                A[k][j] -= A[i][j]*m;
+            }
+            b[k] -= b[i]*m;
         }
     }
 }
 
-void retrossubs(double **A, double * b, double * x, int n) {
-    for (int i = n-1; i >= 0; --i) {
-        x[i] = b[i];
-        for (int j = i+1; j < n; ++j)
-            x[i] -= A[i][j]*x[j];
-        x[i] /= A[i][i];
+
+void retrossubs(double **A, double *b, double *x, int n) {
+    for (int i = n - 1; i >= 0; --i) {
+        double sum = 0.0;
+
+        for (int jj = i + 1; jj < n; jj += BLOCK) {
+            int jend = jj + BLOCK < n ? jj + BLOCK : n;
+            for (int j = jj; j < jend; ++j) {
+                sum += A[i][j] * x[j];
+            }
+        }
+
+        x[i] = (b[i] - sum) / A[i][i];
     }
 }
 
