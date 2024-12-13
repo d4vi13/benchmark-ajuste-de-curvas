@@ -4,7 +4,7 @@
 # Compilador
     CC     = gcc
     CFLAGS =  -O3 -mavx -march=native -DLIKWID_PERFMON -I${LIKWID_INCLUDE} 
-    LFLAGS = -lm
+    LFLAGS = -lm -L${LIKWID_LIB} -llikwid
 
 # Lista de arquivos para distribuição.
 # LEMBRE-SE DE ACRESCENTAR OS ARQUIVOS ADICIONAIS SOLICITADOS NO ENUNCIADO DO TRABALHO
