@@ -132,7 +132,7 @@ int main() {
     puts("");
 */
     // Imprime os tempos
-    printf("%lld %1.10e %1.10e\n", K, tSL, tEG);
+    printf("#tempo:%lld,%1.10e,%1.10e\n", K, tSL, tEG);
 
     return 0;
 }
