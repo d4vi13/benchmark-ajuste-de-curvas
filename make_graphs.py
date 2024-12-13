@@ -32,7 +32,7 @@ for v in versoes:
         for m in metricas:
             for pontos in kpontos:
                data = pd.read_csv("dados/"+v+'-'+grau+'-'+pontos+'-'+m+'.csv') 
-               split_table = data[data[0].str.startswith('TABLE'), na=False].index().tolist()
+               split_table = data[data[0].str.startswith('TABLE', na=False)].index().tolist()
                table_monta_sl = data.iloc[:split_table[0]]
                table_resolve_sl = data.iloc[split_table[0] + 1:]
               
