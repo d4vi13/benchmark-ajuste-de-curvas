@@ -36,11 +36,11 @@ for v in versoes:
                table_monta_sl = data.iloc[:split_table[0]]
                table_resolve_sl = data.iloc[split_table[0] + 1:]
               
-               if m == "L3CACHE"
+               if m == "L3CACHE":
                     metric =  "L3 miss ratio"
-               elif m == "ENERGY"
+               elif m == "ENERGY":
                     metric = "Energy [J]"
-               else
+               else:
                     metric = "FLOPS_DP/s"
 
                dado1 = find_metric(table_monta_sl, metric)  
@@ -54,7 +54,7 @@ for v in versoes:
 
         pd.DataFrame(montaSl).to_csv(basedir+v+"-"+grau+"-"+"montaSl"+".csv",index=False)
         pd.DataFrame(resolveSl).to_csv(basedir+v+"-"+grau+"-"+"resolveSl"+".csv",index=False)
-        for a, b in montaSl, resolveSl
+        for a, b in montaSl, resolveSl:
             a.clear() 
             b.clear() 
         
