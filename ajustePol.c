@@ -113,6 +113,7 @@ int main() {
     LIKWID_MARKER_STOP("resolveSistema");
 
     LIKWID_MARKER_CLOSE;
+    /*
     for (int i = 0; i < n; i++){
         for (int j = 0; j < n; j++)
             printf("%1.15e\n ", A[i][j]);                                                                                                                                            
@@ -129,7 +130,7 @@ int main() {
     for (long long int i = 0; i < p; ++i)
         printf("%1.15e ", fabs(y[i] - P(x[i],N,alpha)) );
     puts("");
-
+*/
     // Imprime os tempos
     printf("%lld %1.10e %1.10e\n", K, tSL, tEG);
 
