@@ -3,7 +3,7 @@
 
 # Compilador
     CC     = gcc
-    CFLAGS =  -O3 -mavx -march=native 
+    CFLAGS =  -O3 -mavx -march=native -DLIKWID_PERFMON -I${LIKWID_INCLUDE} 
     LFLAGS = -lm
 
 # Lista de arquivos para distribuição.
