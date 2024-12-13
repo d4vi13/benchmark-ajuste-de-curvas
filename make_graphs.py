@@ -81,9 +81,9 @@ for v in versoes:
         
 #monta graficos
 for a,m in enumerate(metricas):
-    for j,funcao in enumerate(funcoes):
+    for funcao in funcoes:
         for k,v in enumerate(versoes):
-            for grau in graus:
+            for j,grau in enumerate(graus):
                 data = np.genfromtxt(basedir+v+"-"+str(grau)+"-"+"montaSl"+".csv", delimiter=',', skip_header=1)
                 y_values = data[:, a]
                 plt.plot(kpontos, y_values, marker='o', linestyle='-', color=colors[j+k], label=v+" "+str(grau))  # Ajuste a legenda conforme necessário
@@ -92,9 +92,29 @@ for a,m in enumerate(metricas):
         plt.title(m + " " + funcao)
         plt.legend()
         plt.grid(True)
-        plt.savefig(v+"-"+funcao+"-"+m)
+        plt.savefig("grafico/"+funcao+"-"+m)
+        plt.clf()
 
+for k,v in enumerate(versoes):
+    for i,funcao in enumerate(funcoes):
+        with open("dados/"+v+'-tempo.csv', mode='r') as file:
+            csv_reader = csv.reader(file)
+            y =  []
+            print(v)
+            for k,row in enumerate(csv_reader):
+                if k%2 != 0:
+                    y.append(row[i+1])
 
+            x = kpontos  # First column
+            plt.yscale('log')
+            plt.plot(x, y, marker='o', label=v)
+            y.clear()
+    plt.xlabel("ponto")
+    plt.ylabel('tempo(ms)')
+    plt.title("tempo " + funcao)
+    plt.legend()
+    plt.savefig("grafico/"+funcao+"-tempo")
+    plt.clf()
 
 
         
