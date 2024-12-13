@@ -98,20 +98,19 @@ int main() {
     LIKWID_MARKER_INIT;
 
     // (A) Gera SL
-    LIKWID_MAKER_START("montaSl");
+    LIKWID_MARKER_START("montaSl");
     double tSL = timestamp();
     montaSL(A, b, n, p, x, y);
     tSL = timestamp() - tSL;
-    LIKWID_MAKER_STOP("montaSl");
+    LIKWID_MARKER_STOP("montaSl");
 
     // (B) Resolve SL
-    LIKWID_MAKER_START("resolveSistema");
-    double tSL = timestamp();
+    LIKWID_MARKER_START("resolveSistema");
     double tEG = timestamp();
     eliminacaoGauss(A, b, n); 
     retrossubs(A, b, alpha, n); 
     tEG = timestamp() - tEG;
-    LIKWID_MAKER_STOP("resolveSistema");
+    LIKWID_MARKER_STOP("resolveSistema");
 
     LIKWID_MARKER_CLOSE;
     for (int i = 0; i < n; i++){
