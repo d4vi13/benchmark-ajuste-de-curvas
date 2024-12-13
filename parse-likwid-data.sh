@@ -17,8 +17,8 @@ extract(){
     cat $file | awk -v search=$tag '
     BEGIN { results = "" }
     {
-        if ($0 ~ search && $0 ~ /\|/) {
-            split($0, columns, "|")
+        if ($file ~ search && $file ~ /\|/) {
+            split($file, columns, "|")
                 gsub(" ", "", columns[length(columns)])
                 if (results == "") {
                     results = columns[length(columns)] "\n"
