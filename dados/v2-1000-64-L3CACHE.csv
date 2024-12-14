@@ -1,0 +1,48 @@
+STRUCT,Info,3
+CPU name:,Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz,
+CPU type:,Intel Coffeelake processor,
+CPU clock:,3.407983674 GHz,
+TABLE,Region montaSl,Group 1 Raw,L3CACHE,6
+Region Info,Core 3,
+RDTSC Runtime [s],0.004597,
+call count,1,
+Event,Counter,Core 3
+INSTR_RETIRED_ANY,FIXC0,30202170
+CPU_CLK_UNHALTED_CORE,FIXC1,14385850
+CPU_CLK_UNHALTED_REF,FIXC2,12933790
+MEM_LOAD_RETIRED_L3_HIT,PMC0,2609
+MEM_LOAD_RETIRED_L3_MISS,PMC1,146
+UOPS_RETIRED_ALL,PMC2,36022520
+TABLE,Region montaSl,Group 1 Metric,L3CACHE,7
+Metric,Core 3,
+Runtime (RDTSC) [s],0.0046,
+Runtime unhalted [s],0.0042,
+Clock [MHz],3790.5936,
+CPI,0.4763,
+L3 request rate,0.0001,
+L3 miss rate,4.053020e-06,
+L3 miss ratio,0.0530,
+STRUCT,Info,3
+CPU name:,Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz,
+CPU type:,Intel Coffeelake processor,
+CPU clock:,3.407983674 GHz,
+TABLE,Region resolveSistema,Group 1 Raw,L3CACHE,6
+Region Info,Core 3,
+RDTSC Runtime [s],0.144551,
+call count,1,
+Event,Counter,Core 3
+INSTR_RETIRED_ANY,FIXC0,1241148000
+CPU_CLK_UNHALTED_CORE,FIXC1,542720600
+CPU_CLK_UNHALTED_REF,FIXC2,487949900
+MEM_LOAD_RETIRED_L3_HIT,PMC0,1739100
+MEM_LOAD_RETIRED_L3_MISS,PMC1,68160
+UOPS_RETIRED_ALL,PMC2,1853687000
+TABLE,Region resolveSistema,Group 1 Metric,L3CACHE,7
+Metric,Core 3,
+Runtime (RDTSC) [s],0.1446,
+Runtime unhalted [s],0.1592,
+Clock [MHz],3790.5181,
+CPI,0.4373,
+L3 request rate,0.0010,
+L3 miss rate,3.676996e-05,
+L3 miss ratio,0.0377,

@@ -1,0 +1,52 @@
+STRUCT,Info,3
+CPU name:,Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz,
+CPU type:,Intel Coffeelake processor,
+CPU clock:,3.407970705 GHz,
+TABLE,Region montaSl,Group 1 Raw,FLOPS_DP,6
+Region Info,Core 3,
+RDTSC Runtime [s],0.009244,
+call count,1,
+Event,Counter,Core 3
+INSTR_RETIRED_ANY,FIXC0,18115040
+CPU_CLK_UNHALTED_CORE,FIXC1,8303275
+CPU_CLK_UNHALTED_REF,FIXC2,30813010
+FP_ARITH_INST_RETIRED_128B_PACKED_DOUBLE,PMC0,0
+FP_ARITH_INST_RETIRED_SCALAR_DOUBLE,PMC1,8266769
+FP_ARITH_INST_RETIRED_256B_PACKED_DOUBLE,PMC2,0
+TABLE,Region montaSl,Group 1 Metric,FLOPS_DP,9
+Metric,Core 3,
+Runtime (RDTSC) [s],0.0092,
+Runtime unhalted [s],0.0024,
+Clock [MHz],918.3562,
+CPI,0.4584,
+DP MFLOP/s,894.2896,
+AVX DP MFLOP/s,0,
+Packed MUOPS/s,0,
+Scalar MUOPS/s,894.2896,
+Vectorization ratio,0,
+STRUCT,Info,3
+CPU name:,Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz,
+CPU type:,Intel Coffeelake processor,
+CPU clock:,3.407970705 GHz,
+TABLE,Region resolveSistema,Group 1 Raw,FLOPS_DP,6
+Region Info,Core 3,
+RDTSC Runtime [s],0.000004,
+call count,1,
+Event,Counter,Core 3
+INSTR_RETIRED_ANY,FIXC0,9015
+CPU_CLK_UNHALTED_CORE,FIXC1,14622
+CPU_CLK_UNHALTED_REF,FIXC2,38198
+FP_ARITH_INST_RETIRED_128B_PACKED_DOUBLE,PMC0,56
+FP_ARITH_INST_RETIRED_SCALAR_DOUBLE,PMC1,353
+FP_ARITH_INST_RETIRED_256B_PACKED_DOUBLE,PMC2,152
+TABLE,Region resolveSistema,Group 1 Metric,FLOPS_DP,9
+Metric,Core 3,
+Runtime (RDTSC) [s],3.672545e-06,
+Runtime unhalted [s],4.290530e-06,
+Clock [MHz],1304.5538,
+CPI,1.6220,
+DP MFLOP/s,292.1680,
+AVX DP MFLOP/s,165.5528,
+Packed MUOPS/s,56.6365,
+Scalar MUOPS/s,96.1186,
+Vectorization ratio,37.0766,

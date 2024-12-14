@@ -1,0 +1,36 @@
+# Relatório
+
+## Otimizações
+
+### montaSl
+Para uma melhora de desempenho foi reaproveitado a natureza do problema para reaproveitar 
+problemas ja calculado transformando um algoritmo O(n³) em um O(n²), permitindo um ganho de perfomance estrondoso
+
+### eliminacaoGauss
+
+Na eliminacao de gauss foi usado loop unroll para fazer um
+melhor uso da cache. Como pode ser visto reaproveitamos o 
+A[i][i], A[i][j] e b[i]
+
+### retrossubs
+
+No retrossubs foi usado blocking para tambem melhorar o uso
+de cache, blocking permite que evitemos cache thrashing
+
+## Resultados e graficos
+
+### L3CACHE
+
+No montaSl e no resolveSl podemos ver que temos mudancas significativas no
+uso de cache, em que a v2 tem seu miss ratio quase zerado em 
+comparacao aos outros
+
+### ENERGY
+
+Nao vemos mudancas no uso de energia em nenhum deles
+
+### FLOPS_DP
+
+Vemos uma melhora nos Flops onde emparelha v2 com
+polinomio de grau 1000 com v1 com polinomio de grau 10 
+

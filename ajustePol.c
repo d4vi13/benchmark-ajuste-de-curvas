@@ -51,50 +51,6 @@ void montaSL(double *A, double *b, int n, long long int p, double *x, double *y)
     }
 }
 
-
-/*
- * 1 mudanca: retira a calculo i+j do loop
- * 2 mudanca: funde os dois loops de i ate n-1
- */
-void OLDmontaSL(double *A, double *b, int n, long long int p, double *x, double *y) {
-    int somaIndices;
-    double power;
-    for (int i = 0; i < n; ++i){
-
-        b[i] = 0.0;
-        for (long long int k = 0; k < p; ++k)
-            b[i] += pow(x[k],i) * y[k];
-
-        for (int j = 0; j < n-(n%UNROLL); j += UNROLL) {
-
-            A[i*n+j] = 0.0; 
-            A[i*n+j+1] = 0.0; 
-            A[i*n+j+2] = 0.0; 
-            A[i*n+j+3] = 0.0; 
-            A[i*n+j+4] = 0.0; 
-            A[i*n+j+5] = 0.0; 
-
-            somaIndices = i + j; 
-            for (long long int k = 0; k < p; ++k) {
-                A[i*n+j] += pow(x[k], somaIndices);
-                A[i*n+j+1] += pow(x[k], somaIndices + 1);
-                A[i*n+j+2] += pow(x[k], somaIndices + 2);
-                A[i*n+j+3] += pow(x[k], somaIndices + 3);
-                A[i*n+j+4] += pow(x[k], somaIndices + 4);
-                A[i*n+j+5] += pow(x[k], somaIndices + 5);
-            } 
-        }
-
-        for (int j = n-(n%UNROLL); j < n; ++j){
-            A[i*n+j] = 0.0; 
-            somaIndices = i + j;  
-            for (long long int k = 0; k < p; ++k)
-                A[i*n+j] += pow(x[k], somaIndices);
-        }
-
-    }
-}
-
 void eliminacaoGauss(double **A, double *b, int n) {
     for (int i = 0; i < n; ++i) {
         int iMax = i;
@@ -222,11 +178,6 @@ int main() {
     retrossubs(B, b, alpha, n); 
     tEG = timestamp() - tEG;
 
-    for (int i = 0; i < n*n; i++){
-        printf("%1.15e\n ", A[i]);
-    }
-    printf("matrix ^\n");
-
     // Imprime coeficientes
     for (int i = 0; i < n; ++i)
         printf("%1.15e ", alpha[i]);
@@ -238,7 +189,7 @@ int main() {
     puts("");
 
     // Imprime os tempos
-    printf("%d %lld %1.10e %1.10e\n",n, K, tSL, tEG);
+    printf("%lld,%1.10e,%1.10e\n",n, K, tSL, tEG);
 
     return 0;
 }
